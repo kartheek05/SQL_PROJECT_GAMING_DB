@@ -1,0 +1,358 @@
+mysql> CREATE DATABASE GAMING_DB;
+Query OK, 1 row affected (0.10 sec)
+
+mysql> CREATE TABLE Gamers (
+    ->     gamer_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     gamer_name VARCHAR(100),
+    ->     age INT,
+    ->     city VARCHAR(50)
+    -> );
+ERROR 1046 (3D000): No database selected
+mysql> USE GAMING_DB;
+Database changed
+mysql> CREATE TABLE Gamers (
+    ->     gamer_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     gamer_name VARCHAR(100),
+    ->     age INT,
+    ->     city VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> CREATE TABLE Games (
+    ->     game_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     game_name VARCHAR(100),
+    ->     genre VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.12 sec)
+
+mysql> CREATE TABLE Gaming_Stations (
+    ->     station_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     station_type VARCHAR(50),
+    ->     hourly_rate DECIMAL(10,2)
+    -> );
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> CREATE TABLE Bookings (
+    ->     booking_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     gamer_id INT,
+    ->     game_id INT,
+    ->     station_id INT,
+    ->     booking_hours INT,
+    -> 
+    ->     FOREIGN KEY (gamer_id) REFERENCES Gamers(gamer_id),
+    ->     FOREIGN KEY (game_id) REFERENCES Games(game_id),
+    ->     FOREIGN KEY (station_id) REFERENCES Gaming_Stations(station_id)
+    -> );
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> CREATE TABLE Snacks (
+    ->     snack_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     snack_name VARCHAR(50),
+    ->     price DECIMAL(10,2)
+    -> );
+Query OK, 0 rows affected (0.12 sec)
+
+mysql> CREATE TABLE Snack_Orders (
+    ->     order_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     gamer_id INT,
+    ->     snack_id INT,
+    ->     quantity INT,
+    -> 
+    ->     FOREIGN KEY (gamer_id) REFERENCES Gamers(gamer_id),
+    ->     FOREIGN KEY (snack_id) REFERENCES Snacks(snack_id)
+    -> );
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> INSERT INTO Gamers (gamer_name, age, city) VALUES
+    -> ('Karthik', 20, 'Hyderabad'),
+    -> ('Rahul', 22, 'Bangalore'),
+    -> ('Sneha', 19, 'Chennai'),
+    -> ('Akhil', 24, 'Mumbai'),
+    -> ('Divya', 21, 'Delhi');
+Query OK, 5 rows affected (0.09 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Games (game_name, genre) VALUES
+    -> ('BGMI', 'Battle Royale'),
+    -> ('FIFA 25', 'Sports'),
+    -> ('Valorant', 'Shooting'),
+    -> ('Minecraft', 'Adventure'),
+    -> ('GTA V', 'Action');
+Query OK, 5 rows affected (0.09 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Gaming_Stations (station_type, hourly_rate) VALUES
+    -> ('PS5', 150.00),
+    -> ('Gaming PC', 200.00),
+    -> ('Xbox', 140.00),
+    -> ('VR Setup', 300.00);
+Query OK, 4 rows affected (0.09 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Bookings
+    -> (gamer_id, game_id, station_id, booking_hours)
+    -> VALUES
+    -> (1, 1, 2, 3),
+    -> (2, 2, 1, 2),
+    -> (3, 3, 2, 4),
+    -> (4, 5, 4, 1),
+    -> (5, 4, 3, 2),
+    -> (1, 5, 1, 5);
+Query OK, 6 rows affected (0.09 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Snacks (snack_name, price) VALUES
+    -> ('Burger', 120.00),
+    -> ('Pizza', 250.00),
+    -> ('French Fries', 90.00),
+    -> ('Cold Coffee', 80.00),
+    -> ('Sandwich', 100.00);
+Query OK, 5 rows affected (0.09 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Snack_Orders
+    -> (gamer_id, snack_id, quantity)
+    -> VALUES
+    -> (1, 2, 1),
+    -> (2, 1, 2),
+    -> (3, 4, 1),
+    -> (4, 3, 3),
+    -> (5, 5, 2);
+Query OK, 5 rows affected (0.09 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM GAMERS;
++----------+------------+------+-----------+
+| gamer_id | gamer_name | age  | city      |
++----------+------------+------+-----------+
+|        1 | Karthik    |   20 | Hyderabad |
+|        2 | Rahul      |   22 | Bangalore |
+|        3 | Sneha      |   19 | Chennai   |
+|        4 | Akhil      |   24 | Mumbai    |
+|        5 | Divya      |   21 | Delhi     |
++----------+------------+------+-----------+
+5 rows in set (0.01 sec)
+
+mysql> SELECT * FROM GAMES;
++---------+-----------+---------------+
+| game_id | game_name | genre         |
++---------+-----------+---------------+
+|       1 | BGMI      | Battle Royale |
+|       2 | FIFA 25   | Sports        |
+|       3 | Valorant  | Shooting      |
+|       4 | Minecraft | Adventure     |
+|       5 | GTA V     | Action        |
++---------+-----------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM GAMING_STATIONS;
++------------+--------------+-------------+
+| station_id | station_type | hourly_rate |
++------------+--------------+-------------+
+|          1 | PS5          |      150.00 |
+|          2 | Gaming PC    |      200.00 |
+|          3 | Xbox         |      140.00 |
+|          4 | VR Setup     |      300.00 |
++------------+--------------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM BOOKINGS;
++------------+----------+---------+------------+---------------+
+| booking_id | gamer_id | game_id | station_id | booking_hours |
++------------+----------+---------+------------+---------------+
+|          1 |        1 |       1 |          2 |             3 |
+|          2 |        2 |       2 |          1 |             2 |
+|          3 |        3 |       3 |          2 |             4 |
+|          4 |        4 |       5 |          4 |             1 |
+|          5 |        5 |       4 |          3 |             2 |
+|          6 |        1 |       5 |          1 |             5 |
++------------+----------+---------+------------+---------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM SNAKS;
+ERROR 1146 (42S02): Table 'gaming_db.snaks' doesn't exist
+mysql> SELECT * FROM SNACKS;
++----------+--------------+--------+
+| snack_id | snack_name   | price  |
++----------+--------------+--------+
+|        1 | Burger       | 120.00 |
+|        2 | Pizza        | 250.00 |
+|        3 | French Fries |  90.00 |
+|        4 | Cold Coffee  |  80.00 |
+|        5 | Sandwich     | 100.00 |
++----------+--------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM SNACKS_ORDERS;
+ERROR 1146 (42S02): Table 'gaming_db.snacks_orders' doesn't exist
+mysql> SELECT * FROM SNACK_ORDERS;
++----------+----------+----------+----------+
+| order_id | gamer_id | snack_id | quantity |
++----------+----------+----------+----------+
+|        1 |        1 |        2 |        1 |
+|        2 |        2 |        1 |        2 |
+|        3 |        3 |        4 |        1 |
+|        4 |        4 |        3 |        3 |
+|        5 |        5 |        5 |        2 |
++----------+----------+----------+----------+
+5 rows in set (0.00 sec)
+
+mysql> -- 1.Display all gamers from Hyderabad.
+mysql> SELECT * FROM Gamers
+    -> WHERE city = 'Hyderabad';
++----------+------------+------+-----------+
+| gamer_id | gamer_name | age  | city      |
++----------+------------+------+-----------+
+|        1 | Karthik    |   20 | Hyderabad |
++----------+------------+------+-----------+
+1 row in set (0.01 sec)
+
+mysql> -- 2.Display games whose genre is 'Action'.
+mysql> SELECT * FROM Games
+    -> WHERE genre = 'Action';
++---------+-----------+--------+
+| game_id | game_name | genre  |
++---------+-----------+--------+
+|       5 | GTA V     | Action |
++---------+-----------+--------+
+1 row in set (0.00 sec)
+
+mysql> -- 3.Display gaming stations with hourly rate greater than 150.
+mysql> SELECT * FROM Gaming_Stations
+    -> WHERE hourly_rate > 150;
++------------+--------------+-------------+
+| station_id | station_type | hourly_rate |
++------------+--------------+-------------+
+|          2 | Gaming PC    |      200.00 |
+|          4 | VR Setup     |      300.00 |
++------------+--------------+-------------+
+2 rows in set (0.04 sec)
+
+mysql> -- 4.Display snack orders where quantity is between 1 and 2.
+mysql> SELECT * FROM Snack_Orders
+    -> WHERE quantity BETWEEN 1 AND 2;
++----------+----------+----------+----------+
+| order_id | gamer_id | snack_id | quantity |
++----------+----------+----------+----------+
+|        1 |        1 |        2 |        1 |
+|        2 |        2 |        1 |        2 |
+|        3 |        3 |        4 |        1 |
+|        5 |        5 |        5 |        2 |
++----------+----------+----------+----------+
+4 rows in set (0.08 sec)
+
+mysql> -- 5.Count the total number of gamers.
+mysql> SELECT COUNT(*) AS total_gamers
+    -> FROM Gamers;
++--------------+
+| total_gamers |
++--------------+
+|            5 |
++--------------+
+1 row in set (0.09 sec)
+
+mysql> -- 6.Find the maximum hourly rate among gaming stations.
+mysql> SELECT MAX(hourly_rate) AS highest_rate
+    -> FROM Gaming_Stations;
++--------------+
+| highest_rate |
++--------------+
+|       300.00 |
++--------------+
+1 row in set (0.01 sec)
+
+mysql> -- 7.Find the average snack price.
+mysql> SELECT AVG(price) AS average_price
+    -> FROM Snacks;
++---------------+
+| average_price |
++---------------+
+|    128.000000 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> -- 8.Display total booking hours grouped by gamer.
+mysql> SELECT gamer_id, SUM(booking_hours) AS total_hours
+    -> FROM Bookings
+    -> GROUP BY gamer_id;
++----------+-------------+
+| gamer_id | total_hours |
++----------+-------------+
+|        1 |           8 |
+|        2 |           2 |
+|        3 |           4 |
+|        4 |           1 |
+|        5 |           2 |
++----------+-------------+
+5 rows in set (0.01 sec)
+
+mysql> -- 9.Display gamer names along with the games they booked.
+mysql> SELECT g.gamer_name, ga.game_name
+    -> FROM Bookings b
+    -> JOIN Gamers g
+    -> ON b.gamer_id = g.gamer_id
+    -> JOIN Games ga
+    -> ON b.game_id = ga.game_id;
++------------+-----------+
+| gamer_name | game_name |
++------------+-----------+
+| Karthik    | BGMI      |
+| Karthik    | GTA V     |
+| Rahul      | FIFA 25   |
+| Sneha      | Valorant  |
+| Akhil      | GTA V     |
+| Divya      | Minecraft |
++------------+-----------+
+6 rows in set (0.08 sec)
+
+mysql> -- 10.Display snack names ordered by each gamer.
+mysql> SELECT g.gamer_name, s.snack_name
+    -> FROM Snack_Orders so
+    -> JOIN Gamers g
+    -> ON so.gamer_id = g.gamer_id
+    -> JOIN Snacks s
+    -> ON so.snack_id = s.snack_id;
++------------+--------------+
+| gamer_name | snack_name   |
++------------+--------------+
+| Karthik    | Pizza        |
+| Rahul      | Burger       |
+| Sneha      | Cold Coffee  |
+| Akhil      | French Fries |
+| Divya      | Sandwich     |
++------------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> -- 11.Display gamers who booked more hours than the average booking hours.
+mysql> SELECT * FROM Bookings
+    -> WHERE booking_hours >
+    -> (
+    ->     SELECT AVG(booking_hours)
+    ->     FROM Bookings
+    -> );
++------------+----------+---------+------------+---------------+
+| booking_id | gamer_id | game_id | station_id | booking_hours |
++------------+----------+---------+------------+---------------+
+|          1 |        1 |       1 |          2 |             3 |
+|          3 |        3 |       3 |          2 |             4 |
+|          6 |        1 |       5 |          1 |             5 |
++------------+----------+---------+------------+---------------+
+3 rows in set (0.08 sec)
+
+mysql> -- 12.Display the game with the highest booking hours.
+mysql> SELECT game_name
+    -> FROM Games
+    -> WHERE game_id =
+    -> (SELECT game_id
+    ->     FROM Bookings
+    ->     ORDER BY booking_hours DESC
+    ->     LIMIT 1
+    -> );
++-----------+
+| game_name |
++-----------+
+| GTA V     |
++-----------+
+1 row in set (0.09 sec)
+
+mysql> NOTEE
